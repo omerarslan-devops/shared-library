@@ -82,7 +82,7 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
-			echo nameSpace
+			//echo nameSpace
 			echo targetedEnv
             	}
             }
