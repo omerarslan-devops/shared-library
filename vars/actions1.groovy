@@ -52,12 +52,13 @@ def getBuildProfile() {
 	return buildProfile
 }
 // Get NameSpace
-def getEnvFromBranch(branch) {
+def getUIEnvFromBranch() {
   if (env.BRANCH_NAME == 'main') {
-    targetedEnv = "dev"
+    uiTargetedEnv = "dev"
   } else if (env.BRANCH_NAME == 'qa') {
-    targetedEnv = "qa"
+    uiTargetedEnv = "stage"
   }
+  return uiTargetedEnv
 }
 
 def runPipeline(Map parameters) {
@@ -82,8 +83,7 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
-			//echo nameSpace
-			echo targetedEnv
+			echo uiTargetedEnv
             	}
             }
         }
