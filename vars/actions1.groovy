@@ -87,6 +87,117 @@ def getNameSpace(){
 	return namespace
 }
 
+///////////////// Build Methods ///////////////////////////////////
+
+////// Parameters //////
+def getBuildProfile() {
+	def buildProfile = ""
+	if (env.BRANCH_NAME == "dev" ) {
+		buildProfile = ""
+	} else if (env.BRANCH_NAME == "qa" ) {
+		buildProfile = "qa"
+	}
+	return buildProfile
+}
+
+def getBuildType() {
+	
+	if (buildType == "") {
+		if (fileExists('package.json')) {
+	      buildType = "npm"
+	    } else if (fileExists('pom.xml')) {
+	      buildType = "maven"
+	    }
+	}
+
+    return buildType
+}
+
+/////////////////////// BUILD /////////////////////
+
+def npmBuild() {
+	echo "NPM Build!"
+	buildProfile = getBuildProfile()
+	echo buildProfile
+
+	sh """
+		echo $buildProfile
+		npm install
+		if [ -z $buildProfile ];then
+		   npm run build
+		else
+		   npm run build:$buildProfile
+		fi
+	"""
+}
+
+def mavenBuild() {
+	echo "Maven Build!"
+	sh """
+		mvn clean install
+	"""
+}
+
+def quarkusBuild() {
+	echo "Quarkus  Build!"
+	sh 'chmod 775 mvnw'
+	configFileProvider([configFile(fileId: '74a441a1-3edb-44c6-8990-c7dbbfdf8634', variable: 'MAVEN_SETTINGS')]) {
+      sh './mvnw package -U -s $MAVEN_SETTINGS -DskipTests '
+    }
+}
+
+def gradleBuild() {
+	echo "Gradle  Build!"
+	if (appName == "e-sales-user") {
+		sh 'bash ./gradlew -Dorg.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64 -p e-sales-user clean compileJava bootJar'
+	} else if (appName == "e-sales-promotion")  {
+		sh 'bash ./gradlew -Dorg.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64 -p e-sales-promotion clean compileJava bootJar'
+	} else if (appName == "e-sales-ui")  {
+		sh 'bash ./gradlew :ui:build -x test'
+	}
+	
+	echo "Gradle Build Finish"
+	
+}
+
+def gradleCommonBuild() {
+	echo "Gradle  Build!"
+	if (appName == "e-sales-common")  {
+		sh 'bash ./gradlew -p e-sales-common clean compileJava jar publish'
+	}
+
+	echo "Gradle Common Build Finish"
+	
+}
+
+//////////////////////////////////////////////////////
+def deployToKieServer() {
+    groupId = readMavenPom().getGroupId()
+    artifactId = readMavenPom().getArtifactId()
+    version = readMavenPom().getVersion()        
+	deployKjar = artifactId + '=' + groupId + ':' + artifactId + ':' + version
+	echo "DEPLOY KJAR:"
+	print deployKjar
+}
+
+def mavenDeploy() {
+	echo "Maven Deploy!"
+	configFileProvider([configFile(fileId: 'bpm-kie-build-settings', variable: 'MAVEN_SETTINGS')]) {
+      sh 'mvn clean deploy -DskipTests -U -s $MAVEN_SETTINGS '
+    }
+}
+
+def libDeploy() {
+	echo "Maven Deploy!"
+	env.JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+	echo sh(script: 'env|sort', returnStdout: true)
+	configFileProvider([configFile(fileId: '74a441a1-3edb-44c6-8990-c7dbbfdf8634', variable: 'MAVEN_SETTINGS')]) {
+      sh 'mvn deploy -Dmaven.compiler.executable=/usr/lib/jvm/java-1.11.0-openjdk-amd64 -DskipTests -U -s $MAVEN_SETTINGS '
+    }
+}
+
+///////////////////////////////////////////////
+
 def runPipeline(Map parameters) {
     pipeline {
             node {
