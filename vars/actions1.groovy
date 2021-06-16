@@ -7,6 +7,47 @@ def uiTargetedEnv = ""
 def newparameter01 = ""
 def newparameter02 = ""
 
+
+def getImageDefinition(){
+	def projectName = getProjectName()
+	imageDefinition = projectName + "-" + env.BRANCH_NAME + ":" + env.BUILD_ID
+	return imageDefinition
+}
+
+def getProjectName () {
+	def projectName = "${env.JOB_NAME}".split('/')[0]
+	return projectName
+}
+
+def getCluster(){
+	def cluster = ""
+	
+	if (env.BRANCH_NAME == "dev" || env.BRANCH_NAME == "qa") {
+		cluster = "azure-dev-openshift"
+	} else if (env.BRANCH_NAME == "main" ) {
+		cluster = "benim-clusterim"
+	}
+	return cluster
+}
+
+def getGitTag(){
+	def projectName = getProjectName()
+	gitTag = projectName + "-" + env.BRANCH_NAME + "-" + env.BUILD_ID
+	return gitTag
+}
+
+def getBuildProfile() {
+	def buildProfile = ""
+	if (env.BRANCH_NAME == "dev" ) {
+		buildProfile = ""
+	} else if (env.BRANCH_NAME == "qa" ) {
+		buildProfile = "qa"
+	} else if (env.BRANCH_NAME == "main" ) {
+		buildProfile = "main"
+	}
+	return buildProfile
+}
+
 def runPipeline(Map parameters) {
     pipeline {
             node {
@@ -23,9 +64,13 @@ def runPipeline(Map parameters) {
 			echo appName
 			echo buildType
 			echo parametremiz01
-			echo parametremiz02
-            	} 
-	    }
-    }
-}
+			echo parametremiz02	
+			echo buildProfile
+			echo gitTag
+			echo cluster
+			echo projectName
+            	}
+            }
+        }
+} 
 return this
