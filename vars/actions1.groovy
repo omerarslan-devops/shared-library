@@ -100,6 +100,18 @@ def getNameSpace(){
 	return namespace
 }
 
+def getContainerRegistryAddress () {
+	return "aefes.azurecr.io"
+}
+
+def getHelmChartName(){
+	def helmChartName = ""
+	if (appName.contains ("e-sales")){
+		helmChartName = "e-sales"
+	}
+	
+	return helmChartName
+}
 ///////////////// Build Methods ///////////////////////////////////
 
 def npmBuild() {
