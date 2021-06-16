@@ -53,14 +53,38 @@ def getBuildProfile() {
 }
 
 // Get NameSpace from BranchName
-def GetNameSpaceFromBranch() {
-	  def namespace = ""
-	  if (env.BRANCH_NAME == 'main') {
-	    namespace = "dev"
-	  } else if (env.BRANCH_NAME == 'qa') {
-	    namespace = "stage"
-	  }
-	  return namespace
+def getNameSpace(){
+	def namespace = ""
+	if (appName == ""){
+		if (env.BRANCH_NAME == "dev" ) {
+		namespace = "bpm-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "bpm-qa"
+		}
+	} else {
+	if (projectName == "connect"){
+		if (env.BRANCH_NAME == "dev" ) {
+		namespace = "connect-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "connect-qa"
+		}
+
+	} else if (appName.contains ("e-sales")) {
+		if (env.BRANCH_NAME == "dev" ) {
+			namespace = "e-sales-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "e-sales-qa"
+		}
+	} else {
+		if (env.BRANCH_NAME == "dev" ) {
+		namespace = "bpm-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "bpm-qa"
+		}
+	}
+	}
+	
+	return namespace
 }
 
 def runPipeline(Map parameters) {
@@ -76,7 +100,7 @@ def runPipeline(Map parameters) {
                   	//projectName = parameters.projectName
 			parametremiz01 = parameters.newparameter01
 			parametremiz02 = parameters.newparameter02
-			namespace = GetNameSpaceFromBranch()
+			namespace = getNameSpace()
 			echo appName
 			echo buildType
 			echo parametremiz01
