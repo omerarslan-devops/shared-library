@@ -52,38 +52,12 @@ def getBuildProfile() {
 	return buildProfile
 }
 // Get NameSpace
-def getNameSpace(){
-	def nameSpace = ""
-	if (appName == ""){
-		if (env.BRANCH_NAME == "dev" ) {
-		namespace = "bpm-dev"
-		} else if (env.BRANCH_NAME == "qa" ) {
-			namespace = "bpm-qa"
-		}
-	} else {
-	if (projectName == "connect"){
-		if (env.BRANCH_NAME == "dev" ) {
-		namespace = "connect-dev"
-		} else if (env.BRANCH_NAME == "qa" ) {
-			namespace = "connect-qa"
-		}
-
-	} else if (appName.contains ("deneme")) {
-		if (env.BRANCH_NAME == "dev" ) {
-			namespace = "deneme-dev"
-		} else if (env.BRANCH_NAME == "qa" ) {
-			namespace = "deneme-qa"
-		}
-	} else {
-		if (env.BRANCH_NAME == "main" ) {
-		namespace = "other-dev"
-		} else if (env.BRANCH_NAME == "qa" ) {
-			namespace = "other-qa"
-		}
-	}
-	}
-	
-	return nameSpace
+def getEnvFromBranch(branch) {
+  if (env.BRANCH_NAME == 'main') {
+    targetedEnv = "dev"
+  } else if (env.BRANCH_NAME == 'qa') {
+    targetedEnv = "qa"
+  }
 }
 
 def runPipeline(Map parameters) {
@@ -109,6 +83,7 @@ def runPipeline(Map parameters) {
 			echo projectName
 			echo imageDefinition
 			echo nameSpace
+			echo targetedEnv
             	}
             }
         }
