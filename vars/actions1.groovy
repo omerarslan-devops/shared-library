@@ -6,7 +6,6 @@ def chartmuseum = ""
 def uiTargetedEnv = ""
 def newparameter01 = ""
 def newparameter02 = ""
-def uiTargetedEnv = ""
 
 // Get Image Definition Method
 def getImageDefinition(){
@@ -84,7 +83,6 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
-			uiTargetedEnv = getUIEnvFromBranch ()
 			echo uiTargetedEnv
             	}
             }
