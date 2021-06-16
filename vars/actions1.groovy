@@ -16,6 +16,8 @@ def runPipeline(Map parameters) {
                   	buildType = parameters.buildType
                   	deploymentType = parameters.deploymentType
                   	projectName = parameters.projectName
+			echo appName
+			echo buildType
             	} 
 	    }
     }
