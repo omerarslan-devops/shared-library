@@ -1,4 +1,4 @@
-def projectName="" // test project
+//def projectName="" // test project
 def buildType = "" // quarkusAppBuild, libraryBuild
 def deploymentType = "" // MavenDeploy
 def appName = ""
@@ -58,7 +58,7 @@ def runPipeline(Map parameters) {
                   	appName = parameters.appName
                   	buildType = parameters.buildType
                   	deploymentType = parameters.deploymentType
-                  	projectName = parameters.projectName
+                  	//projectName = parameters.projectName
 			parametremiz01 = parameters.newparameter01
 			parametremiz02 = parameters.newparameter02
 			echo appName
