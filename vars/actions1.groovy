@@ -52,6 +52,19 @@ def getBuildProfile() {
 	return buildProfile
 }
 
+def getBuildType() {
+	
+	if (buildType == "") {
+		if (fileExists('package.json')) {
+	      buildType = "npm"
+	    } else if (fileExists('pom.xml')) {
+	      buildType = "maven"
+	    }
+	}
+
+    return buildType
+}
+
 // Get NameSpace from BranchName
 def getNameSpace(){
 	def namespace = ""
@@ -88,32 +101,6 @@ def getNameSpace(){
 }
 
 ///////////////// Build Methods ///////////////////////////////////
-
-////// Parameters //////
-def getBuildProfile() {
-	def buildProfile = ""
-	if (env.BRANCH_NAME == "dev" ) {
-		buildProfile = ""
-	} else if (env.BRANCH_NAME == "qa" ) {
-		buildProfile = "qa"
-	}
-	return buildProfile
-}
-
-def getBuildType() {
-	
-	if (buildType == "") {
-		if (fileExists('package.json')) {
-	      buildType = "npm"
-	    } else if (fileExists('pom.xml')) {
-	      buildType = "maven"
-	    }
-	}
-
-    return buildType
-}
-
-/////////////////////// BUILD /////////////////////
 
 def npmBuild() {
 	echo "NPM Build!"
