@@ -1,7 +1,7 @@
 def projectName="" // test project
 def buildType = "" // quarkusAppBuild, libraryBuild
 def deploymentType = "" // MavenDeploy
-def apptest = ""
+def appName = ""
 def chartmuseum = ""
 def uiTargetedEnv = ""
 
@@ -12,7 +12,7 @@ def runPipeline(Map parameters) {
 
                 stage("Echo Parameters") {
                   	print parameters
-                  	apptest = parameters.apptest
+                  	appName = parameters.appName
                   	buildType = parameters.buildType
                   	deploymentType = parameters.deploymentType
                   	projectName = parameters.projectName
