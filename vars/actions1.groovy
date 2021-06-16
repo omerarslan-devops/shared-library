@@ -51,15 +51,28 @@ def getBuildProfile() {
 	}
 	return buildProfile
 }
+
+// Test
+def getBuildProfile1() {
+	def test01 = ""
+	if (env.BRANCH_NAME == "dev" ) {
+		test01 = ""
+	} else if (env.BRANCH_NAME == "qa" ) {
+		test01 = "qa"
+	} else if (env.BRANCH_NAME == "main" ) {
+		test01 = "main"
+	}
+	return test01
+}
 // Get NameSpace from BranchName
 def GetNameSpaceFromBranch() {
-  def nameSpace = ""
-  if (env.BRANCH_NAME == 'main') {
-    nameSpace = "dev"
-  } else if (env.BRANCH_NAME == 'qa') {
-    nameSpace = "stage"
-  }
-  return nameSpace
+	  def namespace = ""
+	  if (env.BRANCH_NAME == 'main') {
+	    namespace = "dev"
+	  } else if (env.BRANCH_NAME == 'qa') {
+	    namespace = "stage"
+	  }
+	  return namespace
 }
 
 def runPipeline(Map parameters) {
@@ -84,7 +97,8 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
-			echo nameSpace
+			echo test01
+			echo namespace
             	}
             }
         }
