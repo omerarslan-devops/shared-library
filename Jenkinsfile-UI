@@ -1,0 +1,83 @@
+pipeline {
+    agent { label 'master'  }
+    stages {
+
+        stage('NPM Build') {
+            steps {
+                script {
+                    sh 'ls'
+                    sh 'npm install'
+                    sh 'npm run build:qa'
+                    sh 'pwd'
+                    sh 'ls'
+                }
+                
+
+            }
+        }
+
+        stage('Docker Image Build & Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://aefes.azurecr.io', 'azure-container-registry') {
+                        def dockerImage = docker.build("bpm-web-ui-qa:${env.BUILD_ID}")
+                        /* Push the container to the custom Registry */
+                        dockerImage.push()
+                    }
+
+                }
+                
+
+            }
+        }
+
+        stage('Remove Docker Image') {
+            steps {
+                script {
+                    sh 'echo test'
+                    sh "docker rmi bpm-web-ui-qa:$BUILD_NUMBER"
+                    sh "docker rmi aefes.azurecr.io/bpm-web-ui-qa:$BUILD_NUMBER"
+                    
+                }
+                
+
+            }
+        }
+
+        stage('Deploy Openshift') {
+            steps {
+                script {
+                    withEnv(["PATH+OC=${tool 'oc'}"]) {
+                        openshift.withCluster("azure-dev-openshift") {
+                                openshift.withProject("bpm-qa") {
+                                    def dcpatch = [
+                                       "metadata":[
+                                           "name":"bpm-web-ui",
+                                           "namespace":"bpm-qa"
+                                        ],
+                                       "apiVersion":"apps.openshift.io/v1",
+                                       "kind":"DeploymentConfig",
+                                       "spec":[
+                                           "template":[
+                                               "spec":[
+                                                   "containers":[
+                                                         ["image":"aefes.azurecr.io/bpm-web-ui-qa:$BUILD_NUMBER",
+                                                          "name":"bpm-web-ui",
+                                                          
+                                                          ]
+                                                   ]
+                                               ]
+                                           ]
+                                           ]
+                                       ]
+                            
+                                openshift.apply(dcpatch)
+                                    
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
