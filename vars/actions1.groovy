@@ -12,7 +12,7 @@ def runPipeline(Map parameters) {
 
                 stage("Echo Parameters") {
                   	print parameters
-                  	appName = parameters.apptest
+                  	apptest = parameters.apptest
                   	buildType = parameters.buildType
                   	deploymentType = parameters.deploymentType
                   	projectName = parameters.projectName
