@@ -53,7 +53,7 @@ def getBuildProfile() {
 }
 // Get NameSpace
 def getNameSpace(){
-	def namespace = ""
+	def nameSpace = ""
 	if (appName == ""){
 		if (env.BRANCH_NAME == "dev" ) {
 		namespace = "bpm-dev"
@@ -83,7 +83,7 @@ def getNameSpace(){
 	}
 	}
 	
-	return namespace
+	return nameSpace
 }
 
 def runPipeline(Map parameters) {
@@ -108,7 +108,7 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
-			echo namespace
+			echo nameSpace
             	}
             }
         }
