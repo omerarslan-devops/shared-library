@@ -52,18 +52,6 @@ def getBuildProfile() {
 	return buildProfile
 }
 
-// Test
-def getBuildProfile1() {
-	def test01 = ""
-	if (env.BRANCH_NAME == "dev" ) {
-		test01 = ""
-	} else if (env.BRANCH_NAME == "qa" ) {
-		test01 = "qa"
-	} else if (env.BRANCH_NAME == "main" ) {
-		test01 = "main"
-	}
-	return test01
-}
 // Get NameSpace from BranchName
 def GetNameSpaceFromBranch() {
 	  def namespace = ""
@@ -88,6 +76,7 @@ def runPipeline(Map parameters) {
                   	//projectName = parameters.projectName
 			parametremiz01 = parameters.newparameter01
 			parametremiz02 = parameters.newparameter02
+			namespace = GetNameSpaceFromBranch()
 			echo appName
 			echo buildType
 			echo parametremiz01
@@ -97,7 +86,6 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
-			echo test01
 			echo namespace
             	}
             }
