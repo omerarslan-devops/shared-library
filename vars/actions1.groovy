@@ -43,7 +43,7 @@ def getGitTag(){
 def getBuildProfile() {
 	def buildProfile = ""
 	if (env.BRANCH_NAME == "dev" ) {
-		buildProfile = ""
+		buildProfile = "dev"
 	} else if (env.BRANCH_NAME == "qa" ) {
 		buildProfile = "qa"
 	} else if (env.BRANCH_NAME == "main" ) {
