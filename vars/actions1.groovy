@@ -51,6 +51,40 @@ def getBuildProfile() {
 	}
 	return buildProfile
 }
+// Get NameSpace
+def getNameSpace(){
+	def namespace = ""
+	if (appName == ""){
+		if (env.BRANCH_NAME == "dev" ) {
+		namespace = "bpm-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "bpm-qa"
+		}
+	} else {
+	if (projectName == "connect"){
+		if (env.BRANCH_NAME == "dev" ) {
+		namespace = "connect-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "connect-qa"
+		}
+
+	} else if (appName.contains ("deneme")) {
+		if (env.BRANCH_NAME == "dev" ) {
+			namespace = "deneme-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "deneme-qa"
+		}
+	} else {
+		if (env.BRANCH_NAME == "main" ) {
+		namespace = "other-dev"
+		} else if (env.BRANCH_NAME == "qa" ) {
+			namespace = "other-qa"
+		}
+	}
+	}
+	
+	return namespace
+}
 
 def runPipeline(Map parameters) {
     pipeline {
@@ -74,6 +108,7 @@ def runPipeline(Map parameters) {
 			echo cluster
 			echo projectName
 			echo imageDefinition
+			echo namespace
             	}
             }
         }
