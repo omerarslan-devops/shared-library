@@ -6,6 +6,7 @@ def chartmuseum = ""
 def uiTargetedEnv = ""
 def newparameter01 = ""
 def newparameter02 = ""
+def uiTargetedEnv = ""
 
 // Get Image Definition Method
 def getImageDefinition(){
